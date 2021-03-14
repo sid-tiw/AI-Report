@@ -1,0 +1,10 @@
+*.un~
+*.aux
+*.blg
+*.log
+*.out
+*.tex~
+*.out
+*.exe
+*.eps
+*.bbl
