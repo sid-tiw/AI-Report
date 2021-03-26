@@ -9,6 +9,8 @@
 \usepackage{mathtools}
 \usepackage[euler-digits,euler-hat-accent]{eulervm}
 
+\bibliographystyle{IEEEtran}
+
 \newcommand\Mycomb[2][^n]{\prescript{#1\mkern-0.5mu}{}C_{#2}}
 
 \title{Artificial Intelligence Report on Solutions to Laboratory Problems}
@@ -55,32 +57,50 @@ In the equation \ref{eqn:bayes}, we have used the Bayes theorem to obtain the pr
 since all the coins are equally likely to choose, ${P(C = 1) = \frac{1}{10}}$. Also, P(O) can be rewritten by marginalizing on all the coins:
 \begin{equation}
 \label{eqn:marginalization}
-    P(O) = \sum_{C = 1}^{10} P(C, O) = \sum_{C = 1}^{10} P(O | C) \cdot P(C) = \frac{1}{10} \sum_{C = 1}^{10} P(O | C)
+\begin{aligned}
+P(O) &= \sum_{C = 1}^{10} P(C, O) = \sum_{C = 1}^{10} P(O | C) \cdot P(C)\\
+&= \frac{1}{10} \sum_{C = 1}^{10} P(O | C)
+\end{aligned}
 \end{equation}
 because, ${P(C) = \frac{1}{10} \hspace{1mm} \forall \hspace{1mm} C \in \{1, 2, 3 \ldots 10\}}$.
 
 So, using the result obtained in the equation \ref{eqn:marginalization}, equation \ref{eqn:bayes} can be rewritten as:
 \begin{equation}
 \label{eqn:final}
-P(C = 1 | O) = \frac{P(O | C = 1) \cdot \frac{1}{10}}{\frac{1}{10}\sum_{C = 1}^{10} P(O | C)} = \frac{P(O | C = 1)}{\sum_{C = 1}^{10} P(O | C)}
+\begin{aligned}
+P(C = 1 | O) &= \frac{P(O | C = 1) \cdot \frac{1}{10}}{\frac{1}{10}\sum_{C = 1}^{10} P(O | C)}\\
+&= \frac{P(O | C = 1)}{\sum_{C = 1}^{10} P(O | C)}
+\end{aligned}
 \end{equation}
 
-\begin{thebibliography}{9}
-\bibitem{Travelling Salesman Problem}
-Travelling Salesman Problem
-\\\texttt{https://en.wikipedia.org/wiki/Travelling\_salesman\_problem}
+Now, assume that $n$ and $m$ are two parameters that represent number of heads and number of tails respectively, in $O$. Since, the trials are mutually
+independent, the probability $P(C = 1 | O)$ is given by:
+\begin{equation}
+\label{eqn:finale}
+\begin{aligned}
+P(C = 1 | O) &= \frac{P(O | C = 1)}{\sum_{C = 1}^{10} P(O | C)}\\
+&= \frac{\hat{p}_{1}^{n}\cdot (1 - \hat{p}_{1})^{m}}{\sum_{i = 1}^{10} \hat{p}_{i}^{n}\cdot (1 - \hat{p}_{i})^{m}}
+\end{aligned}
+\end{equation}
 
-\bibitem{ai} 
-Stuart J. Russell and Peter Norvig. 2003.
-\\\textit{Artificial Intelligence: A Modern Approach (2nd. ed.).}
-Pearson Education.
+All the other probabilities can be calculated similarly. Now, expected number of heads for the coin $x$ in $O$ will be:
+\begin{equation}
+\label{eqn:heads}
+\begin{aligned}
+\mathbb{E}[N_{H}] &= n \cdot P(C = x | O) \hspace{2mm}\\
+&= \frac{n\cdot \hat{p}_{x}^{n}\cdot (1 - \hat{p}_{x})^{m}}{\sum_{i = 1}^{10} \hat{p}_{i}^{n}\cdot (1 - \hat{p}_{i})^{m}}
+\end{aligned}
+\end{equation}
 
-\bibitem{test_case} 
-Travelling Salesman Test Cases,
-\\\texttt{http://www.math.uwaterloo.ca/tsp/vlsi/index.html\#XQF131}
-\end{thebibliography}
+We can also obtain the expected number of tails in the same fashion.
 
+So, in the E-step we find out the expected number of heads and tails obtained by using the parameters of that particular iteration.
 
-\end{document}
+In the M-step we use the expected number of heads and tails obtained in the E-step to get a new estimation of the biases of all the coins.
 
+In Expectation Maximization these two steps are repeated until the value of parameters converge to some certain value. The biases thus obtained
+are the best guesses Expectation Maximization can obtain.
+
+\nocite{Do2008}
+\bibliography{references}
 \end{document}
