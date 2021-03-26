@@ -7,6 +7,7 @@
 \usepackage{amsfonts}
 \usepackage{hyperref}
 \usepackage{mathtools}
+\usepackage[euler-digits,euler-hat-accent]{eulervm}
 
 \newcommand\Mycomb[2][^n]{\prescript{#1\mkern-0.5mu}{}C_{#2}}
 
@@ -31,6 +32,38 @@ This report is the part two of discussions on laboratory problems assigned to us
 \end{abstract}
 }
 \maketitle
+
+\section{Hidden Markov Models and Expectation Maximization}
+\subsection{Expectation Maximization for finding the Bias of bent coins}
+\subsubsection{Introduction}
+This problem is to find out the unknown biases of bent coins using the results of random experiments done on the coins.
+We can "guess" the biases of coins smartly using Expectation Maximization, which uses the maximum likelihood along with some guesses
+to find a more "educated" guess. It uses recursion to improve the guesses. The algorithm is explained in the next subsection for $10$ biased coins.
+\subsubsection{The Expectation Maximization algorithm}
+In this algorithm we have to start with an intial guess of the biases of the coins. Let the biases be $\hat{p}_{1}$, $\hat{p}_{2} \ldots$, $\hat{p}_{10}$ for the $10$
+bent coins given in the problem. These biases represent the probability to obtain $1$ (heads) when the coins are tossed. In each iteration the algorithm
+have two steps, the E-step and the M-step.
+
+In the E-step, we calculate that what the probability is, that a certain coin was picked, given the obeservation sequence. This probabilities can be
+calculated easily using Bayes theorem. Assume that $O$ represents the observation sequence and the coins are numbered from $1$ to $10$, then the
+probability that coin $1$ was used to get $O$ is given by:
+\begin{equation}
+\label{eqn:bayes}
+    P(C = 1 | O) = \frac{P(O | C = 1) \cdot P(C = 1)}{P(O)}
+\end{equation}
+In the equation \ref{eqn:bayes}, we have used the Bayes theorem to obtain the probability in terms of likelihood, prior and evidence. Now,
+since all the coins are equally likely to choose, ${P(C = 1) = \frac{1}{10}}$. Also, P(O) can be rewritten by marginalizing on all the coins:
+\begin{equation}
+\label{eqn:marginalization}
+    P(O) = \sum_{C = 1}^{10} P(C, O) = \sum_{C = 1}^{10} P(O | C) \cdot P(C) = \frac{1}{10} \sum_{C = 1}^{10} P(O | C)
+\end{equation}
+because, ${P(C) = \frac{1}{10} \hspace{1mm} \forall \hspace{1mm} C \in \{1, 2, 3 \ldots 10\}}$.
+
+So, using the result obtained in the equation \ref{eqn:marginalization}, equation \ref{eqn:bayes} can be rewritten as:
+\begin{equation}
+\label{eqn:final}
+P(C = 1 | O) = \frac{P(O | C = 1) \cdot \frac{1}{10}}{\frac{1}{10}\sum_{C = 1}^{10} P(O | C)} = \frac{P(O | C = 1)}{\sum_{C = 1}^{10} P(O | C)}
+\end{equation}
 
 \begin{thebibliography}{9}
 \bibitem{Travelling Salesman Problem}
