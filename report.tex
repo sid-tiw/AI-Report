@@ -195,6 +195,38 @@ This is almost same as what we are doing in EM clustering.
 
 The code of our EM clustering can be found at our GitHub codes repository. The result of the clustering of the points using our EM implementation
 is shown in the figure \ref{fig:cluster}.
+\begin{figure}[!h]
+\centering
+\includegraphics[width=2.5in]{images/points.pdf}
+\caption{Points to cluster}
+\label{fig:cluster}
+\end{figure}
+\begin{figure}[!h]
+\centering
+\includegraphics[width=2.5in]{images/clustered_points.pdf}
+\caption{Points grouped in two clusters (green and blue). The points labelled with X represent the means of the corresponding distributions}
+\label{fig:cluster}
+\end{figure}
+
+One interesting thing we found out while implementing the algorithm is that not every start state gives us this clustering. Many start states are a failure.
+And I think it must be right too, because EM only finds the local optimum and not the global optimum. If our initial guess is bad then it probably will not
+give the optimal value of the means. The means, variance and weights of the two Gaussians are given in the table \ref{table:parameters}.
+
+\begin{table}[!h]
+\renewcommand{\arraystretch}{0.4}
+\caption{Parameters of the Gaussians}
+\label{table:parameters}
+\centering
+\begin{tabular}{|c|c|c|c|}
+\hline
+{\bfseries S.No.} & {\bfseries Mean} & {\bfseries Variance} & {\bfseries Weight}\\
+\hline \hline
+1 & 0.7062 & 0.7155 & 0.5010\\
+\hline
+2 & 4.0404 & 0.4763 & 0.4989\\
+\hline
+\end{tabular}
+\end{table}
 \nocite{Do2008}
 \nocite{HMM_Stamp}
 \bibliography{references}
