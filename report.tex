@@ -101,6 +101,42 @@ In the M-step we use the expected number of heads and tails obtained in the E-st
 In Expectation Maximization these two steps are repeated until the value of parameters converge to some certain value. The biases thus obtained
 are the best guesses Expectation Maximization can obtain.
 
+We have coded this expectation maximization in Python(Jupyter Notebook). Also, we noted that if we keep the biases of two different coins the same
+at the start the biases obtained after the expectation maximization are also same for the respective coins.
+Hence, assuming that every coin has a different bias (initializing the coins with different biases),
+the biases obtained are given in the table \ref{table:biases}.
+\begin{table}[!h]
+\renewcommand{\arraystretch}{0.4}
+\caption{Biases of the coins}
+\label{table:biases}
+\centering
+\begin{tabular}{|c|c|c|}
+\hline
+{\bfseries Coin} & {\bfseries Initial Biases} & {\bfseries Final Biases}\\
+\hline\hline
+1 & 0.05 & 0.010000\\
+\hline
+2 & 0.15 & 0.092424\\
+\hline
+3 & 0.25 & 0.176789\\
+\hline
+4 & 0.35 & 0.287559\\
+\hline
+5 & 0.45 & 0.391205\\
+\hline
+6 & 0.55 & 0.477410\\
+\hline
+7 & 0.65 & 0.569790\\
+\hline
+8 & 0.75 & 0.688256\\
+\hline
+9 & 0.85 & 0.784089\\
+\hline
+10 & 0.95 & 0.897061\\
+\hline
+\end{tabular}
+\end{table}
+
 \nocite{Do2008}
 \bibliography{references}
 \end{document}
