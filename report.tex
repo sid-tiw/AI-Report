@@ -11,6 +11,7 @@
 
 \bibliographystyle{IEEEtran}
 
+\DeclareMathOperator*{\argmin}{arg\,min}
 \newcommand\Mycomb[2][^n]{\prescript{#1\mkern-0.5mu}{}C_{#2}}
 
 \title{Artificial Intelligence Report on Solutions to Laboratory Problems}
@@ -94,6 +95,7 @@ All the other probabilities can be calculated similarly. Now, expected number of
 
 We can also obtain the expected number of tails in the same fashion.
 
+\subsubsection{Conclusion}
 So, in the E-step we find out the expected number of heads and tails obtained by using the parameters of that particular iteration.
 
 In the M-step we use the expected number of heads and tails obtained in the E-step to get a new estimation of the biases of all the coins.
@@ -101,8 +103,9 @@ In the M-step we use the expected number of heads and tails obtained in the E-st
 In Expectation Maximization these two steps are repeated until the value of parameters converge to some certain value. The biases thus obtained
 are the best guesses Expectation Maximization can obtain.
 
-We have coded this expectation maximization in Python(Jupyter Notebook). Also, we noted that if we keep the biases of two different coins the same
-at the start the biases obtained after the expectation maximization are also same for the respective coins.
+We have implemented this expectation maximization in Python(Jupyter Notebook). Also, we found out after some exploration that if
+we keep the biases of two different coins the same at the start the biases obtained after the expectation maximization are also
+same for the respective coins.
 Hence, assuming that every coin has a different bias (initializing the coins with different biases),
 the biases obtained are given in the table \ref{table:biases}.
 \begin{table}[!h]
@@ -137,6 +140,62 @@ the biases obtained are given in the table \ref{table:biases}.
 \end{tabular}
 \end{table}
 
+\subsection{Expectation Maximization and k-means clustering}
+\subsubsection{Introduction}
+In $k$-means clustering, we have to divide a set of points in $k$ different groups or sets such that the sum of
+squared distances between every pair in each set is minimized. This can be expressed mathematically as:
+\[
+    \argmin_G \sum_{i = 1}^{k}\sum_{x,y\in G_{i}} \|x - y\|^{2}
+\]
+
+This is also equivalent to maximizing the sum of squared distances of points belonging to different groups. But we can use Gaussian Mixture Models (EM clustering) to
+do a distribution-based clustering as we show in the next subsection.
+
+\subsubsection{EM clustering}
+In EM clustering we take the fact into account, that the set of points given are from different Gaussian Distributions.
+Thus, each Gaussian Distribution represents a group or cluster of points\cite{aibook}. And as soon as we know the distribution, we can
+apply the Expectation Maximization in a much similar way as we did in the coin-bias finding problem (there we assumed that the
+distribution for each coin is a bernaulli distribution). In this particular problem we have to divide the set of points with
+real values (although, it could be multiple real values for each data point, and in that case we have to use multivariate
+Gaussians to model it) in two groups. Let the two groups are represented with two $1-D$ Gaussians $G_{1}$ and $G_{2}$, having
+weights $W_1$ and $W_2$ and given by:
+\[
+    G_{1}(x | \mu_{1}, \sigma{1}) = \frac{1}{2\pi\sigma_{1}^{2}}\exp^{-\frac{(x - \mu_{1})^{2}}{2\sigma_{1}^{2}}}
+\]
+\[
+    G_{2}(x | \mu_{2}, \sigma{2}) = \frac{1}{2\pi\sigma_{2}^{2}}\exp^{-\frac{(x - \mu_{2})^{2}}{2\sigma_{2}^{2}}}
+\]
+
+In the coin-bias finding problem, the parameters were just the probability of getting heads, but in this
+instance of Expectation Maximization the parameters are ${\hat{\theta}_{1} = (\mu_{1}, \sigma_{1}, W_1)}$ and
+$\hat{\theta}_{2} = (\mu_{2}, \sigma_{2}, W_2)$.\\
+
+In the E-step we find out the probability of each point to be in one of the clusters and then that value will act as the expected assignment
+of the point to that cluster. The equation \ref{eqn:gmm} shows how to calculate the probability of point $d$ being in first cluster.
+\begin{equation}
+\label{eqn:gmm}
+P(C = 1 | d) = \frac{P(d | C = 1)\cdot P(C = 1)}{P(d | C = 1)\cdot P(C = 1) + P(d | C = 2)\cdot P(C = 2)}
+\end{equation}
+
+Also using the fact that $P(C = 1) = W_{1}$ and $P(C = 2) = W_{2}$ and the probability of each Gaussian the equation \ref{eqn:gmm} can be
+rewritten as:
+\begin{equation}
+\label{eqn:gmmfinal}
+P(C = 1 | d) = \frac{W_{1} \cdot G_{1}(d | \mu_{1}, \sigma{1})}{W_1\cdot G_{1}(d | \mu_{1}, \sigma{1}) + W_2\cdot G_{2}(d | \mu_{2}, \sigma{2})}
+\end{equation}
+
+Similarly, the probability of point $d$ lying in the second cluster can also be calculated.\\
+
+In the M-step, we use the probabilities calculated above to find out the new values of mean, variance, and weights.
+
+\subsubsection{Conclusion}
+EM clustering assumes that the data points follow the Gaussian Distribution. Another way to find out the clustering is the famous K-means algorithm.
+In K-means, similar to EM clustering, we initally assume the means and then improve it in each iteration by clustering points according to those means.
+This is almost same as what we are doing in EM clustering.
+
+The code of our EM clustering can be found at our GitHub codes repository. The result of the clustering of the points using our EM implementation
+is shown in the figure \ref{fig:cluster}.
 \nocite{Do2008}
+\nocite{HMM_Stamp}
 \bibliography{references}
 \end{document}
