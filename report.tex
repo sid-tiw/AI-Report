@@ -37,6 +37,217 @@ This report is the part two of discussions on laboratory problems assigned to us
 \maketitle
 
 \section{Hidden Markov Models and Expectation Maximization}
+\subsection{Finding structures in the English language using Hidden Markov Models}
+\subsubsection{Introduction}
+In this problem, we are trying to use the Hidden Markov Models to predict the structure of English Languague. Initially we are not assuming anything about the structure and doing the experiment based
+on a large collection of words ($50,000$ to be exact) extracted from the book War and Peace by Leo Tolstoy. There are two hidden states (details in the next section) and the observation sequence
+(obtained by words extracted) contains all the $26$ letters of the English language plus the space character. And these characters are mapped to indices from 0 to 26 where 0 represents the letter 'a' and
+26 is the space.
+\subsubsection{Forward \& Backward algorithms}
+Let $O$ represents the observation sequence, $\lambda = (\pi, A, B)$ represents the model, where $A$ is the matrix containing the transition probabilities, $B$ is the matrix containing the emission
+probabilities and $\pi$ is the initial state probabilities.
+
+Now in order to infer anything about the hidden states in Hidden Markov Models, we first have to find out how to find the probabilities ${\gamma_t(i) = P(x_t = q_i | O, \lambda)}$ and ${\gamma_t(i, j) = P(x_t = q_i, x_{t + 1} = q_j | O, \lambda)}$.
+The first term $\gamma_t(i)$ is the probability of being in the $i^{th}$ hidden state at time $t$, given the model and the observation sequence. The second term $\gamma_t(i, j)$ represents the probability of being in the $i^{th}$ state at time $t$ and then
+transiting to the $j^{th}$ state at time $t + 1$. These probabilities enable us to compute the matrices $A$, $B$ and $\pi$ and thus to reestime the model. Thus we can use expectation maximization to estimate the models if these two probabilities are available.
+But calculating the probabilities is not straight forward and the naive algorithm to calculate the given probabilities will take a great amount of time. So, to calculate these two probabilities we will first calculate the alpha-pass (or the Forward algorithm) and the beta-pass (the Backward algorithm):
+\begin{equation}
+\begin{aligned}
+    \alpha_t(i) &= P(O_0, O_1, O_2, \ldots, O_t, x_t = q_i | \lambda)\\
+    \beta_t(i) &= P(O_{t + 1}, O_{t + 2}, O_{t + 3}, \ldots, O_{T - 1} | x_{t} = q_i, \lambda)
+\end{aligned}
+\end{equation}
+
+The reason to calculate the alpha and beta pass is that these probabilities can be easily expressed recursively and thus can greatly reduce the time required to calculate these probabilities. Also, the probabilities $\gamma_t(i)$ and $\gamma_t(i, j)$ can be
+expressed in terms of these alpha and beta pass along with the probability $P(O | \lambda)$ is given in the equation \ref{eqn:express}.
+\begin{equation}
+\label{eqn:express}
+\begin{aligned}
+P(O | \lambda) &= \sum_{i = 0}^{N}\alpha_{T - 1}(i)\\
+\gamma_t(i) &= \frac{\alpha_t(i)\cdot \beta_t(i)}{P(O | \lambda)}\\
+\end{aligned}
+\end{equation}
+\begin{equation}
+\begin{aligned}
+    \gamma_t(i, j) = \frac{\alpha_t(i)\cdot a_{ij}\cdot b_j(O_{t + 1}) \cdot \beta_{t + 1}(j)}{P(O | \lambda)} \text{, where}\\
+    a_{ij} = P(x_{t + 1} = q_j | x_{t} = q_i, \lambda)\\
+    b_j(O_{t + 1}) = P(O_{t + 1} | x_{t + 1} = q_j, \lambda)
+\end{aligned}
+\end{equation}
+Hence, calculating alpha and beta pass will help us to infer about the model. Now the calculation of alpha pass can be done as given in the Algorithm \ref{algo:alpha_pass}. It is very clear from the algorithm
+that the time complexity will be $O(T \cdot N^2)$.
+\begin{algorithm}
+\caption{The alpha pass}\label{algo:alpha_pass}
+\begin{algorithmic}[1]
+\Procedure{ALPHA-PASS}{$\lambda, O$} \Comment{the model and the observation sequence}
+\For{$i \in \{0, 1, \ldots, N - 1\}$}
+\State $\alpha_{0}[i] \gets \pi[i] \cdot B[i][O[i]]$
+\EndFor
+\For{$t \in \{1, 2, \ldots, T - 1\}$}
+\For{$i \in \{0, 1, \ldots, N - 1\}$}
+\State $\alpha_t[i] \gets 0$
+\For{$j \in \{0, 1, \ldots, N - 1\}$}
+\State $\alpha_t[i] \gets \alpha_{t}[i] + \alpha_{t - 1}[j] \cdot A[j][i] \cdot B[i][O[t]]$
+\EndFor
+\EndFor
+\EndFor
+\State \Return $\alpha$
+\EndProcedure
+\end{algorithmic}
+\end{algorithm}
+The algorithm for calculating the Beta-Pass is also given in the Algorithm \ref{algo:beta_pass}.
+\begin{algorithm}
+\caption{The Beta pass}\label{algo:beta_pass}
+\begin{algorithmic}[1]
+\Procedure{BETA-PASS}{$\lambda, O$} \Comment{the model and the observation sequence}
+\For{$i \in \{0, 1, \ldots, N - 1\}$}
+\State $\beta_{T - 1}[i] \gets 1$
+\EndFor
+\For{$t \in \{T - 2, T - 3, \ldots, 0\}$}
+\For{$i \in \{0, 1, \ldots, N - 1\}$}
+\State $\beta_t[i] \gets 0$
+\For{$j \in \{0, 1, \ldots, N - 1\}$}
+\State $\beta_t[i] \gets \beta_{t}[i] + \beta_{t + 1}[j] \cdot A[i][j] \cdot B[j][O[t + 1]]$
+\EndFor
+\EndFor
+\EndFor
+\State \Return $\beta$
+\EndProcedure
+\end{algorithmic}
+\end{algorithm}
+\subsubsection{Expectation Maximization for infering the model}
+Now that we have calculated the Alpha and Beta pass, we need a way to estimate the model. The Expectation Maximization algorithm is a great algorithm to do so. It works in two steps (the E and the M-step),
+repeating these two steps multiple times such that after each iteration the model is improved. Repeating these steps multiple times thus gives us a local maxima of the probability that the given observation
+sequence occured. The process is described formally in Algorithm \ref{algo:infer}.
+\begin{algorithm}
+\caption{Expectation Maximization}\label{algo:infer}
+\begin{algorithmic}[1]
+\Procedure{Expectation-Maximization}{$O$} \Comment{the model and the observation sequence}
+\State $\lambda \gets (\pi, A, B)$
+\State $mx \gets 100$ \Comment{the maximum number of iterations}
+\State $it \gets 0$
+\While {$it \neq mx$}
+\State $\alpha = $ALPHA-PASS($\lambda, O$)
+\State $\beta = $BETA-PASS($\lambda, O$)
+\State $PO \gets 0$
+\For{$i \in \{0, 1, \ldots, N - 1\}$} \Comment{Calculate $P(O | \lambda)$}
+\State $PO \gets PO + \alpha_{T - 1}[i]$
+\EndFor
+\For{$t \in \{0, 1, \ldots, T - 2\}$}
+\For{$i \in \{0, 1, \ldots, N - 1\}$}
+\State $\gamma_t(i) \gets 0$
+\For{$j \in \{0, 1, \ldots, N - 1\}$}
+\State $\gamma_t[i, j] \gets \frac{\alpha_t[i]\cdot A[i][j] \cdot B[j][O[t + 1]] \cdot \beta_{t + 1}[j]}{PO}$
+\State $\gamma_t[i] \gets \gamma_t[i] + \gamma_t[i, j]$
+\EndFor
+\EndFor
+\EndFor
+\For{$i \in \{0, 1, \ldots, N - 1\}$} \Comment{calculate last $\gamma$}
+\State $\gamma_{T - 1}[i] = \frac{\alpha_{T - 1}[i]\cdot \beta_{T - 1}[i]}{PO}$
+\EndFor
+\For{$i \in \{0, 1, \ldots, N - 1\}$} \Comment{Re-estimation of $\pi$}
+\State $\pi[i] = \gamma_0[i]$
+\EndFor
+\For{$i \in \{0, 1, \ldots, N - 1\}$} \Comment{Re-estimation of $A$}
+\State $de \gets 0$
+\For{$t \in \{0, 1, \ldots, T - 2\}$}
+\State $de \gets de + \gamma_t[i]$
+\EndFor
+\For{$j \in \{0, 1, \ldots, N - 1\}$}
+\State $nu \gets 0$
+\For{$t \in \{0, 1, \ldots, T - 2\}$}
+\State $nu \gets nu + \gamma_t[i, j]$
+\EndFor
+\State $A[i][j] = \frac{nu}{de}$
+\EndFor
+\EndFor
+\For{$i \in \{0, 1, \ldots, N - 1\}$} \Comment{Re-estimation of $B$}
+\State $de \gets 0$
+\For{$t \in \{0, 1, \ldots, T - 1\}$}
+\State $de \gets de + \gamma_t[i]$
+\EndFor
+\For{$j \in \{0, 1, \ldots, M - 1\}$}
+\State $nu \gets 0$
+\For{$t \in \{0, 1, \ldots, T - 1\}$}
+\If{$O[t] == j$}
+\State $nu \gets nu + \gamma_t[i, j]$
+\EndIf
+\EndFor
+\State $B[i][j] = \frac{nu}{de}$
+\EndFor
+\EndFor
+\State $it \gets it + 1$
+\EndWhile
+\EndProcedure
+\end{algorithmic}
+\end{algorithm}
+\subsubsection{Results}
+We set the number of hidden states to $2$ and the hidden states are coming out to be consonants and vowels. The matrix B is given in the Table \ref{table:B}.
+\begin{table}
+\renewcommand{\arraystretch}{0.4}
+\caption{Symbol Emission Matrix}
+\label{table:B}
+\centering
+\begin{tabular}{|c|c|c|}
+\hline
+{\bfseries Symbol} & {\bfseries State1} & {\bfseries State2}\\
+\hline\hline
+A & 0.14479 & 0.00006\\
+\hline
+B & 0.00000 & 0.02308\\
+\hline
+C & 0.00022 & 0.04068\\
+\hline
+D & 0.00000 & 0.07201\\
+\hline
+E & 0.20710 & 0.00000\\
+\hline
+F & 0.00000 & 0.02896\\
+\hline
+G & 0.00400 & 0.02843\\
+\hline
+H & 0.00000 & 0.10074\\
+\hline
+I & 0.12318 & 0.00000\\
+\hline
+J & 0.00000 & 0.00171\\
+\hline
+K & 0.00010 & 0.01227\\
+\hline
+L & 0.00000 & 0.05972\\
+\hline
+M & 0.00000 & 0.03911\\
+\hline
+N & 0.00000 & 0.11880\\
+\hline
+O & 0.11992 & 0.00000\\
+\hline
+P & 0.00065 & 0.03417\\
+\hline
+Q & 0.00000 & 0.00139\\
+\hline
+R & 0.00000 & 0.09223\\
+\hline
+S & 0.00000 & 0.09776\\
+\hline
+T & 0.00009 & 0.13677\\
+\hline
+U & 0.03826 & 0.00527\\
+\hline
+V & 0.00000 & 0.02304\\
+\hline
+W & 0.00000 & 0.03609\\
+\hline
+X & 0.00000 & 0.00259\\
+\hline
+Y & 0.00287 & 0.02982\\
+\hline
+Z & 0.00000 & 0.00103\\
+\hline
+Space & 0.35878 & 0.01426\\
+\hline
+\end{tabular}
+\end{table}
 \subsection{Expectation Maximization for finding the Bias of bent coins}
 \subsubsection{Introduction}
 This problem is to find out the unknown biases of bent coins using the results of random experiments done on the coins.
