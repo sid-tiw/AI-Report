@@ -1,5 +1,10 @@
 \documentclass[journal, compsoc]{IEEEtran}
+\documentclass{article}
 
+\usepackage[utf8]{inputenc}
+\usepackage{longtable}
+\usepackage{graphicx}
+\usepackage{algorithm}
 \usepackage{graphicx}
 \usepackage{algorithm}
 \usepackage{algpseudocode}
@@ -438,6 +443,190 @@ give the optimal value of the means. The means, variance and weights of the two 
 \hline
 \end{tabular}
 \end{table}
+
+\title{Artificial Intelligence Report on Solutions to Laboratory Problems}
+
+\author{Siddhartha~Tiwari, Siddharth~Mani~Tiwari, Saurabh~Kumar, Pushkar~Tiwari}
+
+%\author{
+%\IEEEauthorblockN{Siddhartha Tiwari}\IEEEauthorblockA{201851127}
+%\and
+%\IEEEauthorblockN{Siddharth Mani Tiwari}\IEEEauthorblockA{201851126}
+%\and
+%\IEEEauthorblockN{Saurabh Kumar}\IEEEauthorblockA{201851113}
+%\and
+%\IEEEauthorblockN{Pushkar Tiwari}\IEEEauthorblockA{201851095}
+%}
+
+\section{Graph Search agent And 8 puzzle}
+\subsection{To design a graph search agent and understand the use of a hash table, queue
+in state space search.}
+
+\begin{algorithm}
+\caption{ Graph search algorithm}
+\begin{algorithmic}
+\Function{graph-search}{$search-space$}\Comment{ return solution or failure}
+\State $visited \gets \{\}$
+\State $frontier \gets \{start\}$ 
+\While{$frontier.size$ $\neq$ 0}
+\State $curr \gets frontier.dequeue()$
+\If{$curr = gl$}
+\State \textbf{return} $start \rightarrow curr$
+\EndIf
+\State $frontier.enqueue(curr.children \notin visited)$
+\State $visited \gets visited + \{curr\}$
+\EndWhile\label{bfsendwhile}
+\EndProcedure
+\end{algorithmic}
+\end{algorithm}
+
+\subsection{Flowchart}
+
+\begin{figure}[!h]
+\centering
+\includegraphics[width=3.5in]{images/Week1.jpeg}
+\caption{Flowchart of the agent}
+\label{fig_sim}
+\end{figure}
+
+
+\subsection{The functions imitating the environment for PUZZLE-8}
+Our environment stores the goal state and then we mark the
+previously visited nodes as true.
+
+Successor states can be found using Successor() function.
+\textbf{Function:} Compute heuristics\textunderscore value (state) \\
+This function calculates the heuristic value of a given state.
+Heuristic value is calculated as counting the number of misplaced tiles for a given state. \\
+
+\textbf{Function:} is\textunderscore valid(x,y) \\
+This function checks whether the current state transition is valid or not. \\
+
+\textbf{Function:} successor \\
+This function stores the successor of
+a given node in its child by moving an empty cell in all the
+possible directions. \\
+
+\textbf{Function:} visit(State) \\
+This function checks whether the state is already visited or
+not.
+
+\subsection{Iterative Deepening Search}
+Iterative Deepening Search (IDS) is an iterative graph searching strategy that takes advantage of the completeness of the Breadth-First Search (BFS) strategy but uses much less memory in each iteration (similar to Depth-First Search).
+
+IDS achieves the desired completeness by enforcing a depth-limit on DFS that mitigates the possibility of getting stuck in an infinite or a very long branch. It searches each branch of a node from left to right until it reaches the required depth. Once it has, IDS goes back to the root node and explores a different branch that is similar to DFS.\\
+
+\begin{tabular} { | p {3 cm} | p {3 cm} | p {2 cm} | }
+\hline
+\multicolumn{3} { | c | }{Performance And Comparisons}\\
+\hline
+Uniform State Space Search Method & Time Complexity & Space Complexity \\
+\hline
+$BFS$ & $O(b^{d})$ & $O(b^{d})$ \\
+$DFS$ & $O(b^{d})$ & $O(b.d)$ \\
+Iterative Deepening Search & $O(b^{d})$ & $O(b.d)$ \\
+\hline
+\end{tabular}
+
+\subsection{Considering the cost associated with every move to be the same (uniform cost), write a function which can backtrack and produce the path taken to reach the goal state from the source/ initial state.}
+
+\textbf{Function:} Solution() \\
+This function backtracks and produces the path and action
+taken to reach the goal state from initial state.\\
+
+\begin{figure}[!h]
+\centering
+\includegraphics[width=2.5in]{images/snippet.PNG}
+\caption{Path Followed}
+\label{fig_sim}
+\end{figure}
+
+\subsection{Uniform Cost analysis}
+Cost analysis on the basis of depth of the tree and time taken to reach the goal state and total number of nodes that are generated during this process. \\ \\
+
+\begin{tabular} { | p {2 cm} | p {2 cm} | p {3 cm} | }
+\hline
+\multicolumn{3} { | c | }{Cost Analysis}\\
+\hline
+Depth & Time(in seconds) & Space(Nodes generated) \\
+\hline
+$0$ & $11.442$ & $0$\\
+$1$ & $23.442$ & $3$\\
+$2$ & $31.932$ & $6$\\
+$3$ & $33.08$ & $9$\\
+$4$ & $56.53$ & $13$\\
+$5$ & $45.30$ & $15$\\
+$6$ & $38.30$ & $20$\\
+$7$ & $43.04$ & $29$\\
+$8$ & $55.29$ & $39$\\
+$9$ & $31.50$ & $73$\\
+$10$ & $25.56$ & $96$\\
+\hline
+\end{tabular}
+ \\ \\
+
+\begin{figure}[!h]
+\centering
+\includegraphics[width=3in]{images/graph1.PNG}
+\caption{Memory requirement profile graph}
+\label{fig_sim}
+\end{figure}
+
+\section{Matchbox Educable Naughts and Crosses Engine : MENACE}
+\subsection{Introduction}
+The Matchbox Educable Noughts and Crosses Engine or MENACE was a mechanical computer made from 304 matchboxes.It was designed to play human opponents in games of noughts and crosses (tic-tac-toe) by returning a move for any given state of play and to refine its strategy through reinforcement learning.
+Each of the matchboxes contains a number of coloured
+beads, each colour representing a valid move Menace could
+play for corresponding board layout. The starting number of
+beads in each matchbox varies depending on the number of
+turns that have already been played.
+
+\subsection{Initial Configuration}
+For each configuration of the tic-tac-toe game, we have to
+have a matchbox. The number of match box required can be
+very large as the number of possible “game states” is a large
+number ($3^{9} = 19683$). However, this number can be reduced
+if we apply the fact that some game states will never appear
+if the winning state comes before that and some game states
+we dont have to count .Once we have the matchboxes, we will
+throw away the match sticks and put some beads of 9 different
+colors. Each colour should have more or less equal number of
+beads inside the box . Each color will represent a unique box
+on the board.In Donald Michie’s original version of Menace,
+the box representing Menace’s first turn had four beads for
+each different move. The boxes representing the layouts of the
+board for Menace’s second turn contained three beads for each
+different move; there were two beads each for Menace’s third;
+and one of each in the boxes representing Menace’s fourth go.
+There are no boxes representing Menace’s fifth move as there
+is only one space remaining and Menace is forced to take it.
+
+\subsection{Gameplay}
+\begin{itemize}
+\item each tic-tac-toe board position corresponds to a matchbox.
+\item at the beginning of play, each matchbox is filled will beads of different colors.
+\item there are nine bead colors: one for each board position.
+\item when it is MENACE’s turn, open drawer corresponding to board configuration
+ and select a bead randomly. Make the corresponding move. Leave bead on
+ table and leave matchbox open.
+
+\end{itemize}
+
+\subsection{Reward}
+\begin{itemize}
+\item play an entire game to its conclusion until it ends: win/lose/draw.
+\item if MENACE loses the game, remove beads from table and throw them away.
+\item if MENACE draws, replace each bead back into the box it came from. Add an
+ extra bead of the same color to each box.
+\item if MENACE wins, replace each bead back into the box it came from. Add \textbf{THREE} extra beads of the same color to each box.
+\end{itemize}
+
+\subsection{Implementation}
+
+
+\end{document}
+
+
 \nocite{Do2008}
 \nocite{HMM_Stamp}
 \bibliography{references}
