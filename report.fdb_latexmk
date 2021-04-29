@@ -1,5 +1,12 @@
 # Fdb version 3
-["pdflatex"] 1619724599 "d:/AI/AI-Report/report.tex" "report.pdf" "report" 1619724599
+["bibtex report"] 0 "report.aux" "report.bbl" "report" 0
+  "./IEEEtran.bst" 1619721820 61632 bc5380b3434a66b895bbc75d3d380540 ""
+  "references.bib" 1619727680 1129 6ea52d37ce29d319bee62740a569dad3 ""
+  "report.aux" 0 -1 0 "pdflatex"
+  (generated)
+  "report.blg"
+  "report.bbl"
+["pdflatex"] 1619727857 "d:/AI/AI-Report/report.tex" "report.pdf" "report" 1619727857
   "C:/Users/kumar/AppData/Local/MiKTeX/miktex/data/le/pdftex/pdflatex.fmt" 1619723515 9524577 8f374861363082005a03232b08faad0f ""
   "C:/Users/kumar/AppData/Local/MiKTeX/pdftex/config/pdftex.map" 1619723893 82507 a9eef8696c92627b87e9975edea03b2a ""
   "C:/Users/kumar/AppData/Local/Programs/MiKTeX/fonts/enc/dvips/base/8r.enc" 1458473887 4993 80dc9bab7f31fb78a000ccfed0e27cab ""
@@ -151,17 +158,20 @@
   "C:/Users/kumar/AppData/Local/Programs/MiKTeX/tex/latex/refcount/refcount.sty" 1576433952 9878 9e94e8fa600d95f9c7731bb21dfb67a4 ""
   "C:/Users/kumar/AppData/Local/Programs/MiKTeX/tex/latex/rerunfilecheck/rerunfilecheck.sty" 1575571282 9715 b051d5b493d9fe5f4bc251462d039e5f ""
   "C:/Users/kumar/AppData/Local/Programs/MiKTeX/tex/latex/url/url.sty" 1388490452 12796 8edb7d69a20b857904dd0ea757c14ec9 ""
-  "d:/AI/AI-Report/report.tex" 1619724582 27465 d6e3e37c1d57dd97746e8f6c06bd7e6b ""
+  "d:/AI/AI-Report/report.tex" 1619727852 29571 76a5ed110c9d4e7a76956c783ca95c62 ""
+  "images/Random_moves.PNG" 1619726614 11818 6d0f24b1e0453273602029f9e1bc3304 ""
   "images/Week1.jpeg" 1619597663 44803 3bea38895a7320dd922457d734a968b0 ""
   "images/clustered_points.pdf" 1619721820 51639 87efa4c0c10bc8e35b9a186f7cea8619 ""
   "images/graph1.PNG" 1619624624 21750 42159725e921ad6a7ffae351de595992 ""
   "images/points.pdf" 1619721820 49186 34ebd27ed7b3332da1f39b080c1df975 ""
   "images/snippet.PNG" 1619601568 17401 d912641c290be633a71841747667bc5e ""
-  "report.aux" 1619724599 34 3985256e7290058c681f74d7a3565a19 "pdflatex"
+  "images/states_generator.PNG" 1619726115 7999 692df0cd7e4d7890706abc16a1595fc0 ""
+  "report.aux" 1619727857 34 3985256e7290058c681f74d7a3565a19 "pdflatex"
+  "report.bbl" 0 -1 0 "bibtex report"
   "report.out" 0 -1 0 "pdflatex"
-  "report.tex" 1619724582 27465 d6e3e37c1d57dd97746e8f6c06bd7e6b ""
+  "report.tex" 1619727852 29571 76a5ed110c9d4e7a76956c783ca95c62 ""
   (generated)
-  "report.out"
-  "report.log"
-  "report.pdf"
   "report.aux"
+  "report.pdf"
+  "report.log"
+  "report.out"

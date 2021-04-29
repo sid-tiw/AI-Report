@@ -622,12 +622,44 @@ is only one space remaining and Menace is forced to take it.
 \end{itemize}
 
 \subsection{Implementation}
+\begin{itemize}
+\item First generate all the possible states of the game and possible moves for each of the states. This step generates a huge number of states.
 
+\begin{figure}[!h]
+\centering
+\includegraphics[width=3in]{images/states_generator.PNG}
+\caption{Generate all the states}
+\label{fig_sim}
+\end{figure}
 
-\end{document}
+\item Since tic-tac-toe game board is symmetric, so many of the states are actually similar states if rotated or taken mirror image of the board. So we remove all the duplicate states that we generated. After this we are left with only around 900 states.
+
+\item Now, the AI agent start playing games (initially with random moves and then with different strategies) with itself. 
+
+\begin{figure}[!h]
+\centering
+\includegraphics[width=3in]{images/Random_moves.PNG}
+\caption{Playing with random moves}
+\label{fig_sim}
+\end{figure}
+
+After every game, it updates all the moves corresponding to the visited states as follows:
+\begin{itemize}
+\item If it wins the game then it adds the corresponding move in the possible moves for that states. This increases the possibility of selecting that move again if we uniformly sample the moves for that state. Shorter the games more will be the addition of the moves. Also, closer the the step to the winning step of the game more will be the adding of the winning moves to the state.
+\item If it loses the game, it deletes the corresponding moves that it has played from the states. Shorter the games more will be the deleting of the moves. Also, closer the the step to the winning step of the game more will be the deletion of the winning moves to the state.
+\end{itemize}
+
+\item Now, after thousands of self games, the states have more of the winning moves than the losing moves.
+\item The system saves all the states and corresponding moves in a experience.dat file.
+    
+\end{itemize}
+    
+Before playing with human player, the system reads the experience.dat file and loads the staes and corresponding moves. Now for every state in the game, the agent plays the maximum occurring moves for that state.
 
 
 \nocite{Do2008}
 \nocite{HMM_Stamp}
+\nocite{Menace1}
+\nocite{Menace2}
 \bibliography{references}
 \end{document}
