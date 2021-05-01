@@ -1,5 +1,4 @@
 \documentclass[journal, compsoc]{IEEEtran}
-\documentclass{article}
 
 \usepackage[utf8]{inputenc}
 \usepackage{longtable}
@@ -444,28 +443,15 @@ give the optimal value of the means. The means, variance and weights of the two 
 \end{tabular}
 \end{table}
 
-\title{Artificial Intelligence Report on Solutions to Laboratory Problems}
-
-\author{Siddhartha~Tiwari, Siddharth~Mani~Tiwari, Saurabh~Kumar, Pushkar~Tiwari}
-
-%\author{
-%\IEEEauthorblockN{Siddhartha Tiwari}\IEEEauthorblockA{201851127}
-%\and
-%\IEEEauthorblockN{Siddharth Mani Tiwari}\IEEEauthorblockA{201851126}
-%\and
-%\IEEEauthorblockN{Saurabh Kumar}\IEEEauthorblockA{201851113}
-%\and
-%\IEEEauthorblockN{Pushkar Tiwari}\IEEEauthorblockA{201851095}
-%}
-
 \section{Graph Search agent And 8 puzzle}
 \subsection{To design a graph search agent and understand the use of a hash table, queue
 in state space search.}
 
 \begin{algorithm}
-\caption{ Graph search algorithm}
+\caption{Graph search algorithm}
+\label{bfsendwhile}
 \begin{algorithmic}
-\Function{graph-search}{$search-space$}\Comment{ return solution or failure}
+\Procedure{graph-search}{$search-space$}\Comment{ return solution or failure}
 \State $visited \gets \{\}$
 \State $frontier \gets \{start\}$ 
 \While{$frontier.size$ $\neq$ 0}
@@ -475,7 +461,7 @@ in state space search.}
 \EndIf
 \State $frontier.enqueue(curr.children \notin visited)$
 \State $visited \gets visited + \{curr\}$
-\EndWhile\label{bfsendwhile}
+\EndWhile
 \EndProcedure
 \end{algorithmic}
 \end{algorithm}
